@@ -5,7 +5,7 @@ import logging
 
 # Relative Imports
 import pytest
-from solver import reduce_from_answer, solve
+from solver import reduce_from_answer, reduce_from_feedback, solve
 
 
 @pytest.mark.parametrize(
@@ -33,25 +33,43 @@ def test_reduce_from_answer(caplog, candidate, answer, word_list, reduced_list):
     assert _reduced_list == reduced_list
 
 
+def test_reduce_from_feedback():
+    """Test reduce_from_feedback function works as expected."""
+
+    # Given
+    words = ["could", "moult", "would", "wound", "young", "youth"]
+
+    # When
+    reduced_words = reduce_from_feedback("nobly", "_G_G_", words)
+
+    # Then
+    assert reduced_words == ["could", "moult", "would"]
+
+
 @pytest.mark.parametrize(
-    "word_list,top_result",
+    "guesses,feedback",
     [
-        (
-            ["vouch", "couch", "pouch", "cough", "could", "dough", "bough", "would"],
-            "couch",
-        ),
+        (["raise", "nobly", "could"], ["_____", "_G_G_", "GGGGG"]),
     ],
 )
-def test_solve(caplog, word_list, top_result):
+def test_solve(caplog, guesses, feedback):
     """Test solve function works as expected."""
 
     # Set the logger capture level for debugging.
     caplog.set_level(logging.DEBUG)
 
-    # Given - Parameterised Inputs
+    # Setup
+    with open("../../five_letter_words.txt", "r") as f:
+        words = f.read().splitlines()
 
-    # When
-    _result = solve(word_list)
+    for i, (guess, feedback) in enumerate(zip(guesses, feedback)):
 
-    # Then
-    assert list(_result.keys())[0] == top_result
+        words = reduce_from_feedback(guess, feedback.upper(), words)
+        top_guess = list(solve(words, 1).keys())[0]
+
+        try:
+            assert guesses[i + 1] == top_guess
+        except IndexError:
+            pass
+
+    assert len(words) == 1

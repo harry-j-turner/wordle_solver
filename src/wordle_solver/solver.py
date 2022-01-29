@@ -122,7 +122,7 @@ def reduce_from_feedback(guess: str, feedback: str, word_list: list[str]) -> lis
 
         # Rule 1 - If letter matches at position, remove all that don't match.
         if feedback[i] == "G":
-            _word_list = green_filter(word_list, i, guess[i])
+            _word_list = green_filter(_word_list, i, guess[i])
 
         # Rule 2 - If not in answer, keep words that don't contain the letter.
         elif feedback[i] == "_":
