@@ -1,0 +1,10 @@
+# Flake8 Lint Configuration
+[flake8]
+select = ANN,B,B9,BLK,C,D,DAR,E,F,I,S,W
+ignore = D202,E402,S107,S106,S105,S104,W504,BLK100,B008,B009,B902,E203,W503,E501,ANN002,ANN003,ANN101,ANN204,ANN202,ANN206,ANN205,ANN102,S101
+
+docstring-convention = google
+max-complexity = 10
+max-line-length = 99
+
+import-order-style = google
