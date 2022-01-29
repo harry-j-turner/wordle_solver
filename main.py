@@ -27,10 +27,6 @@ if __name__ == "__main__":
         # Compute reduction.
         words = reduce_from_feedback(user_guess, feedback.upper(), words)
 
-        if len(words) == 1:
-            print("Done.")
-            break
-
         # Solve.
         print("\nSolving...")
         top_guesses = solve(words, 5).items()
@@ -38,3 +34,7 @@ if __name__ == "__main__":
         print("\nTop Guesses:")
         for guess, value in top_guesses:
             print(f"{guess}: {value}")
+
+        if len(words) == 1:
+            print("\nDone.")
+            break
