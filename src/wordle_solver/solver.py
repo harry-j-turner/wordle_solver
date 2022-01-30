@@ -1,8 +1,7 @@
 """Solver."""
 
-# Third Party Imports
-import tqdm
-
+# System Imports
+import sys
 
 # Utility Functions
 ###################
@@ -110,9 +109,13 @@ def reduce_from_feedback(guess: str, feedback: str, word_list: list[str]) -> lis
         A reduced word list with invalid words filtered out.
     """
     # Validate inputs.
-    assert len(guess) == 5
-    assert len(feedback) == 5
-    assert set(feedback) <= {"_", "G", "Y"}
+    assert len(guess) == 5, "Guess must be five letters long."
+    assert len(feedback) == 5, "Feedback must be five letters long."
+    assert set(feedback) <= {
+        "_",
+        "G",
+        "Y",
+    }, "Invalid characters in feedback, use '_' for black/blank, 'G' for green, or 'Y' for yellow. "
 
     # Create a copy of the wordlist.
     _word_list = list(word_list)
@@ -182,7 +185,9 @@ def solve(word_list: list[str], top_k: int = 10) -> dict[str, float]:
     result_set = set()
 
     # For every word in the list, compute the value.
-    for guess in tqdm.tqdm(word_list):
+    for i, guess in enumerate(word_list):
+        sys.stdout.write(f"\rDone {i + 1}/{len(word_list)} words.")
+        sys.stdout.flush()
         result_set.add((guess, value(guess, word_list)))
 
     # Convert the result set into a dictionary and return.

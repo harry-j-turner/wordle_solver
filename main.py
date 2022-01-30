@@ -31,7 +31,7 @@ if __name__ == "__main__":
         print("\nSolving...")
         top_guesses = solve(words, 5).items()
 
-        print("\nTop Guesses:")
+        print("\n\nTop Guesses:")
         for guess, value in top_guesses:
             print(f"{guess}: {value}")
 
