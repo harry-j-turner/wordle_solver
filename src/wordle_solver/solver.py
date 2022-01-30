@@ -142,9 +142,9 @@ def reduce_from_feedback(guess: str, feedback: str, word_list: list[str]) -> lis
 def value(guess: str, word_list: list[str]) -> float:
     """Compute the value for a guess.
 
-    For a given guess and word list, compute the expected size of the eliminated word list if you
+    For a given guess and word list, compute the expected size of the reduced word list if you
     had made that guess. It assumes each word in the word list is the answer in turn and computes
-    the eliminated word list size if that answer were correct. Given that the answer could be any of
+    the reduced word list size if that answer were correct. Given that the answer could be any of
     the words with equal probability, I take the average.
 
     Args:
@@ -155,15 +155,16 @@ def value(guess: str, word_list: list[str]) -> float:
         The expected size of the word list should you make this guess.
     """
 
-    eliminated_word_list_sum = 0
+    reduced_word_list_running_sum = 0
 
     # For each word in the word list, assume it's the answer and compute reduction.
     for answer in word_list:
 
-        eliminated_word_list = reduce_from_answer(guess, answer, word_list)
-        eliminated_word_list_sum += len(eliminated_word_list)
+        # Compute the new word list and add it's size to the running sum.
+        reduced_word_list = reduce_from_answer(guess, answer, word_list)
+        reduced_word_list_running_sum += len(reduced_word_list)
 
-    return eliminated_word_list_sum / len(word_list)
+    return reduced_word_list_running_sum / len(word_list)
 
 
 def solve(word_list: list[str], top_k: int = 10) -> dict[str, float]:
@@ -186,10 +187,14 @@ def solve(word_list: list[str], top_k: int = 10) -> dict[str, float]:
 
     # For every word in the list, compute the value.
     for i, guess in enumerate(word_list):
+
+        # This just prints a status update to the console.
         sys.stdout.write(f"\rDone {i + 1}/{len(word_list)} words.")
         sys.stdout.flush()
+
+        # Store the value for this word in a set.
         result_set.add((guess, value(guess, word_list)))
 
-    # Convert the result set into a dictionary and return.
+    # Convert the result set into a dictionary and return - Keep only the top K.
     sorted_result_set = sorted(result_set, key=lambda k: (k[1], k[0]))
     return {k: v for k, v in sorted_result_set[:top_k]}
