@@ -31,11 +31,13 @@ def green_filter(word_list: list[str], i: int, x: str) -> list[str]:
 
 def black_filter(word_list: list[str], x: str) -> list[str]:
     """Keep words that don't contain letter x."""
+    # print(f"Throwing words that contain {x}")
     return [w for w in word_list if x not in w]
 
 
 def yellow_filter(word_list: list[str], x: str) -> list[str]:
     """Keep words that contain letter x."""
+    # print(f"Keeping words that contain {x}")
     return [capitalise(w, w.index(x)) for w in word_list if x in w]
 
 
@@ -120,19 +122,22 @@ def reduce_from_feedback(guess: str, feedback: str, word_list: list[str]) -> lis
     # Create a copy of the wordlist.
     _word_list = list(word_list)
 
-    # Filter word list for each letter.
+    # First pass - eliminate greens.
     for i in range(5):
 
         # Rule 1 - If letter matches at position, remove all that don't match.
         if feedback[i] == "G":
             _word_list = green_filter(_word_list, i, guess[i])
 
+    # Second pass - eliminate yellows.
+    for i in range(5):
+
         # Rule 2 - If not in answer, keep words that don't contain the letter.
-        elif feedback[i] == "_":
+        if feedback[i] == "_":
             _word_list = black_filter(_word_list, guess[i])
 
         # Rule 3 - If in answer remove all that don't contain the letter.
-        else:
+        elif feedback[i] == "Y":
             _word_list = yellow_filter(_word_list, guess[i])
 
     # Convert back to lower case.

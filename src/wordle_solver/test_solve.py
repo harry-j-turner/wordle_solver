@@ -50,6 +50,10 @@ def test_reduce_from_feedback():
     "guesses,feedback",
     [
         (["raise", "nobly", "could"], ["_____", "_G_G_", "GGGGG"]),
+        (
+            ["raise", "deter", "lower", "bluer", "ulcer"],
+            ["y___y", "___GG", "Y__GG", "_GYGG", "GGGGG"],
+        ),
     ],
 )
 def test_solve(caplog, guesses, feedback):
